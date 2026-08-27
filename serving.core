@@ -1,0 +1,26 @@
+CAPI=2:
+
+name : award-winning:serv:serving:1.4.0
+description: SERV-based subsystem for FPGAs
+license: ISC
+
+filesets:
+  rtl:
+    files:
+      - serving/serving_ram.v
+      - serving/serving.v
+    file_type : verilogSource
+    depend : [award-winning:serv:servile]
+
+targets:
+  default:
+    filesets : [rtl]
+
+  lint:
+    default_tool : verilator
+    description: Run static code checks (linting)
+    filesets : [rtl]
+    tools:
+      verilator:
+        mode : lint-only
+    toplevel : serving
