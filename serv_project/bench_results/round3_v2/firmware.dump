@@ -1,0 +1,43 @@
+
+/home/chenyoo/riscv_benchmark/serv_project/firmware.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	00001137          	lui	x2,0x1
+   4:	40000537          	lui	x10,0x40000
+   8:	00100293          	addi	x5,x0,1
+   c:	00550023          	sb	x5,0(x10) # 40000000 <arr+0x3fffff90>
+  10:	038000ef          	jal	x1,48 <main>
+
+00000014 <halt>:
+  14:	900002b7          	lui	x5,0x90000
+  18:	0002a023          	sw	x0,0(x5) # 90000000 <arr+0x8fffff90>
+  1c:	ff9ff06f          	jal	x0,14 <halt>
+
+00000020 <asm_uart_putchar>:
+  20:	00050293          	addi	x5,x10,0
+  24:	40000537          	lui	x10,0x40000
+  28:	1002e293          	ori	x5,x5,256
+  2c:	00129293          	slli	x5,x5,0x1
+  30:	00550023          	sb	x5,0(x10) # 40000000 <arr+0x3fffff90>
+  34:	0012d293          	srli	x5,x5,0x1
+  38:	00000013          	addi	x0,x0,0
+  3c:	00000013          	addi	x0,x0,0
+  40:	fe0298e3          	bne	x5,x0,30 <asm_uart_putchar+0x10>
+  44:	00008067          	jalr	x0,0(x1)
+
+Disassembly of section .text.startup:
+
+00000048 <main>:
+  48:	07000793          	addi	x15,x0,112
+  4c:	01078713          	addi	x14,x15,16
+  50:	00e787ab          	.insn	4, 0x00e787ab
+  54:	80000737          	lui	x14,0x80000
+  58:	0ff7f793          	andi	x15,x15,255
+  5c:	00f70023          	sb	x15,0(x14) # 80000000 <arr+0x7fffff90>
+  60:	900007b7          	lui	x15,0x90000
+  64:	0007a023          	sw	x0,0(x15) # 90000000 <arr+0x8fffff90>
+  68:	00000513          	addi	x10,x0,0
+  6c:	00008067          	jalr	x0,0(x1)

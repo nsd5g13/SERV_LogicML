@@ -1,0 +1,16 @@
+[VCD] Tracing enabled -> log/sim_wave.vcd
+[Monitor] Reset complete. Watching for PC changes...
+[Monitor] First valid PC = 0x0 at cycle 1
+0x0 -> 0x4 : 36 cycles
+0x4 -> 0x8 : 36 cycles
+0x8 -> 0xc : 36 cycles
+0xc -> 0x10 : 70 cycles
+0x10 -> 0x48 : 68 cycles
+0x48 -> 0x4c : 36 cycles
+0x4c -> 0x50 : 36 cycles
+0x50 -> 0x54 : 250 cycles
+0x54 -> 0x58 : 36 cycles
+0x58 -> 0x5c : 36 cycles
+0x5c -> 0x60 : 70 cycles
+0x60 -> 0x64 : 36 cycles
+[VCD] Trace file closed: log/sim_wave.vcd
