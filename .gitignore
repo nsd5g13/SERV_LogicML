@@ -1,0 +1,65 @@
+# ── Build artifacts ──
+*.o
+*.elf
+*.bin
+*.hex
+serv_project/firmware.*
+Codespace/practice_zhang/compilation/
+Codespace/practice_zhang/bin/
+
+# ── Simulation output ──
+trace.bin
+trace.vcd
+trace_dump.txt
+cps
+
+# ── Python ──
+__pycache__/
+*.pyc
+
+# practice files
+instr_capture.sh
+popcount_sweep.sh
+
+# ── Backup files ──
+*.bak
+*~
+
+# ── OS / editor ──
+*.deb
+.vscode/
+
+# ── Agent scratch / workspace (local only) ──
+.agents/
+
+AGENTS.md
+
+# ── Large vendored / generated directories ──
+serv_project/zephyr/
+serv_project/modules/
+serv_project/standalone_build/
+serv_project/bootloader/
+serv_project/build/zephyr/
+serv_project/build/
+ibex_project/
+Codespace/Ibex_codespace/
+Codespace/backup_files/
+tools/
+serv_project/log
+Codespace/practice_zhang/
+serv_project/obj_dir_custom/
+serv_project/fusesoc_libraries/fusesoc_cores/
+serv_project/fusesoc_libraries/mdu/
+# backup of the flattened serv_v1.5_rtl embedded git repo (restoreable)
+serv_project/fusesoc_libraries/serv_v1.5_rtl.git.bak/
+serv_project/fusesoc_libraries/picorv32.git.bak/
+# picorv32 generated artifacts (Verilator build dir, sim logs, disassembly dump)
+serv_project/fusesoc_libraries/picorv32/build/
+serv_project/fusesoc_libraries/picorv32/log/
+serv_project/fusesoc_libraries/picorv32/*.log
+serv_project/fusesoc_libraries/picorv32/firmware.dump
+serv_project/serv_rtl_v1/
+serv_project/plan/
+serv_project/DataFlow/
+serv_project/riscv-gnu-toolchain/
+serv_project/riscv-opcodes/

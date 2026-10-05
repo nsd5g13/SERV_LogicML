@@ -1,0 +1,15 @@
+[submodule "serv_project/bootloader/mcuboot"]
+	path = serv_project/bootloader/mcuboot
+	url = https://github.com/zephyrproject-rtos/mcuboot
+[submodule "serv_project/fusesoc_libraries/fusesoc_cores"]
+	path = serv_project/fusesoc_libraries/fusesoc_cores
+	url = https://github.com/fusesoc/fusesoc-cores
+[submodule "serv_project/fusesoc_libraries/mdu"]
+	path = serv_project/fusesoc_libraries/mdu
+	url = https://github.com/zeeshanrafique23/mdu
+[submodule "serv_project/tools/edtt"]
+	path = serv_project/tools/edtt
+	url = https://github.com/zephyrproject-rtos/edtt
+[submodule "serv_project/tools/net-tools"]
+	path = serv_project/tools/net-tools
+	url = https://github.com/zephyrproject-rtos/net-tools
