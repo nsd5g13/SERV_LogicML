@@ -1,213 +1,209 @@
-<img align="right" src="https://svg.wavedrom.com/{signal:[{wave:'0.P...'},{wave:'023450',data:'S E R V'}]}"/>
-
-# SERV
-
-[![Join the chat at https://gitter.im/librecores/serv](https://badges.gitter.im/librecores/serv.svg)](https://gitter.im/librecores/serv?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Compliance tests](https://github.com/olofk/serv/actions/workflows/ci.yml/badge.svg)](https://github.com/olofk/serv/actions/workflows/ci.yml)
-[![Documentation Status](https://readthedocs.org/projects/serv/badge/?version=latest)](https://serv.readthedocs.io/en/latest/?badge=latest)
-
-SERV is an award-winning bit-serial RISC-V core
-
-In fact, the award-winning SERV is the world's smallest RISC-V CPU. It's the perfect companion whenever you need a bit of computation and silicon real estate is at a premium.
-
-How small is it then? Synthesizing the latest version of SERV in its most minimal form, yields the following results for some popular FPGA architectures and a typical CMOS process.
-
-| Lattice iCE40 | Intel Cyclone 10LP | AMD Artix-7 | CMOS   |
-| ------------- | ------------------ | ----------- | ------ |
-| 198 LUT       | 239 LUT            | 125 LUT     | 2.1kGE |
-| 164 FF        | 164 FF             | 164 FF      |        |
-
-
-If you want to know more about SERV, what a bit-serial CPU is and what it's good for, I recommend starting out by watching the fantastic short SERV movies
-* [introduction to SERV](https://www.award-winning.me/serv-introduction/)
-* [SERV : RISC-V for a fistful of gates](https://www.award-winning.me/serv-for-a-fistful-of-gates/)
-* [SERV: 32-bit is the New 8-bit](https://www.award-winning.me/serv-32-bit-is-the-new-8-bit/)
-* [Bit by bit - How to fit 8 RISC V cores in a $38 FPGA board (presentation from the Zürich 2019 RISC-V workshop)](https://www.youtube.com/watch?v=xjIxORBRaeQ)
-
-All SERV videos and more can also be found [here](https://www.award-winning.me/videos/).
-
-Apart from being the world's smallest RISC-V CPU, SERV also aims at being the best documented RISC-V CPU. For this there is an official [SERV user manual](https://serv.readthedocs.io/en/latest/#) with block diagrams that are correct to the gate-level, cycle-accurate timing diagrams and an in-depth description of how things work.
-
-SERV is open source released under the ISC license. If you need a commercial license with patent grants, professional paid support or added features, please contact <olof@award-winning.me>
-
-## Systems using SERV
-
-SERV can be easily integrated into any design, but if you are looking at just quickly trying it out, here is a list of some systems that are already using SERV:
-
-[Servant](https://serv.readthedocs.io/en/latest/servant.html) is the reference platform for SERV. It is a very basic SoC that contains just enough to run Zephyr RTOS. Servant is intended for FPGAs and has been ported to around 20 different FPGA boards. It is also used to run the RISC-V regression test suite.
-
-[CoreScore](https://corescore.store/) is an award-giving benchmark for FPGAs and their synthesis/P&R tools. It tests how many SERV cores that can be put into a particular FPGA.
-
-[Observer](https://github.com/olofk/observer) is a configurable and software-programmable sensor aggregation platform for heterogeneous sensors.
-
-[Subservient](https://github.com/olofk/subservient/) is a small technology-independent SERV-based SoC intended for ASIC implementations together with a single-port SRAM.
-
-[Litex](https://github.com/enjoy-digital/litex) is a Python-based framework for creating FPGA SoCs. SERV is one of the 30+ supported cores. A Litex-generated SoC has been used to run DooM on SERV.
-
-
-
-
-## Getting started
-
-:o: Create a directory to keep all the different parts of the project together.
-        
-        $ mkdir servWorkspace
-        $ cd servWorkspace
-
-- Create and export an environment variable, WORKSPACE, for easy reference to that directory:
-
-        $ export WORKSPACE=$(pwd)
-
-Each of the following commands should be run from the workspace directory:
-
-- Install FuseSoC
-
-        $ pip install fusesoc
-- Add the FuseSoC standard library 
-
-        $ fusesoc library add fusesoc_cores https://github.com/fusesoc/fusesoc-cores
-  
-- The FuseSoC standard library already contain a version of SERV, but if we want to make changes to SERV, run the bundled example or use the Zephyr support, it is better to add SERV as a separate library into the workspace
-
-        $ fusesoc library add serv https://github.com/olofk/serv
-
-:blue_book: The SERV repo will now be available in `$WORKSPACE/fusesoc_libraries/serv`. We will refer to that directory as `$SERV`.
-- Create and export its environment variable
-
-        $ export SERV="$WORKSPACE/fusesoc_libraries/serv"
-    
-- Install the latest version of [Verilator](https://www.veripool.org/wiki/verilator)
-- (Optional) To support RISC-V M extension, Multiplication and Division unit (MDU) can be included in SERV as a separate library.
-
-        $ fusesoc library add mdu https://github.com/zeeshanrafique23/mdu
-    MDU will be available in `$WORKSPACE/fusesoc_libraries/mdu`
-  
-
-:green_book: We are now ready to do our first exercises with SERV. If everything above is done correctly, we can use Verilator as a linter to check the SERV source code.
-
-    $ fusesoc run --target=lint serv
-
-If everything worked, the output should look like
-
-    INFO: Preparing award-winning:serv:serv:1.4.0
-    INFO: Setting up project
-
-    INFO: Building simulation model
-    INFO: Running
-
-After performing all the steps that are mentioned above, the directory structure from the `$WORKSPACE` should look like this:
-
-    .
-    $WORKSPACE
-    |
-    ├── build
-    │   └── ...
-    ├── fusesoc.conf
-    └── fusesoc_libraries
-        ├── fusesoc_cores
-        │   └── ...
-        ├── mdu
-        │   └── ...
-        └── serv
-            └── ...
-
-
-## Running pre-built test software
-
-Build and run the single threaded zephyr hello world example with verilator (should be stopped with Ctrl-C):
-
-    fusesoc run --target=verilator_tb servant --uart_baudrate=57600 --firmware=$SERV/sw/zephyr_hello.hex
-
-..or... the multithreaded version
-
-    fusesoc run --target=verilator_tb servant --uart_baudrate=57600 --firmware=$SERV/sw/zephyr_hello_mt.hex --memsize=16384
-
-Both should yield an output ending with
-
-    ***** Booting Zephyr OS zephyr-v1.14.1-4-gc7c2d62513fe *****
-    Hello World! service
-
-For a more advanced example, we can also run the Dining philosophers demo
-
-    fusesoc run --target=verilator_tb servant --uart_baudrate=57600 --firmware=$SERV/sw/zephyr_phil.hex --memsize=32768
-
-...or... the synchronization example
-
-    fusesoc run --target=verilator_tb servant --uart_baudrate=57600 --firmware=$SERV/sw/zephyr_sync.hex --memsize=16384
-
-...or... the blinky example (note that the ```uart_baudrate``` should not be defined for the blinky test)
-
-    fusesoc run --target=verilator_tb servant --firmware=$SERV/sw/blinky.hex --memsize=16384
-
-
-
-If the [toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain) is installed, other applications can be tested by compiling the assembly program and converting to bin and then hex with makehex.py found in [`$SERV/sw`](/sw/). 
-
-:bulb:RISC-V Compressed Extension can be enabled by passing `--compressed=1` parameter. 
-
-## Verification
-SERV is verified using RISC-V compliance tests for the base ISA (RV32I) and the implemented extensions (M, C, Zicsr). The instructions on running Compliance tests using RISCOF framework are given in [verif](/verif/) directory.
-
-
-## Other targets
-
-The above targets are run on the servant SoC, but there are some targets defined for the CPU itself. Verilator can be run in lint mode to check for design problems by running
-
-    fusesoc run --target=lint serv
-
-It's also possible to just synthesise for different targets to check resource usage and such. To do that for the iCE40 devices, run
-
-    fusesoc run --tool=icestorm serv --pnr=none
-
-...or to synthesize with vivado for Xilinx targets, run
-
-    fusesoc run --tool=vivado serv --pnr=none
-
-This will synthesize for the default Vivado part. To synthesise for a specific device, run e.g.
-
-    fusesoc run --tool=vivado serv --pnr=none --part=xc7a100tcsg324-1
-
-## Zephyr support
-
-SERV, or rather the Servant SoC, can run the [Zephyr RTOS](https://www.zephyrproject.org). The Servant-specific drivers and BSP is located in the zephyr subdirectory of the SERV repository. In order to use Zephyr on Servant, a project directory structure must be set up that allows Zephyr to load the Servant-specific files as a module.
-
-First, the Zephyr SDK and the "west" build tool must be installed. The [Zephyr getting started guide](https://docs.zephyrproject.org/latest/getting_started/index.html) describes these steps in more detail.
-
-Assuming that SERV was installed into `$WORKSPACE/fusesoc_libraries/serv` as per the prerequisites, run the following command to make the workspace also work as a Zephyr workspace.
-
-    west init
-
-Specify the SERV repository as the manifest repository, meaning it will be the main entry point when Zephyr is looking for modules.
-
-    west config manifest.path $SERV
-
-Get the right versions of all Zephyr submodules
-
-    west update
-
-It should now be possible to build Zephyr applications for the Servant SoC within the workspace. This can be tested e.g. by building the Zephyr Hello world samples application
-
-    cd zephyr/samples/hello_world
-    west build -b service
-
-After a successful build, Zephyr will create an elf and a bin file of the application in `build/zephyr/zephyr.{elf,bin}`. The bin file can be converted to a verilog hex file, which in turn can be preloaded to FPGA on-chip memories and run on a target board, or loaded into simulated RAM model when running simulations.
-
-To convert the newly built hello world example into a Verilog hex file, run
-
-    python3 $SERV/sw/makehex.py zephyr/samples/hello_world/build/zephyr/zephyr.bin 4096 > hello.hex
-
-4096 is the number of 32-bit words to write and must be at least the size of the application binary. `hello.hex` is the resulting hex file. Running a simulation can now be done as described in [Running pre-built test software](#running-pre-built-test-software), e.g.
-
-    fusesoc run --target=verilator_tb servant --uart_baudrate=57600 --firmware=/path/to/hello.hex
-
-Or to create an FPGA image with the application preloaded to on-chip RAM, e.g. for a Nexys A7 board, run
-
-    fusesoc run --target=nexys_a7 servant --memfile=/path/to/hello.hex
-
-## Good to know
-
-Don't feed serv any illegal instructions after midnight. Many logic expressions are hand-optimized using the old-fashioned method with Karnaugh maps on paper, and shamelessly take advantage of the fact that some opcodes aren't supposed to appear. As serv was written with 4-input LUT FPGAs as target, and opcodes are 5 bits, this can save quite a bit of resources in the decoder.
-
-The bus interface is kind of Wishbone, but with most signals removed. There's an important difference though. Don't send acks on the instruction or data buses unless serv explicitly asks for something by raising its cyc signal. Otherwise serv becomes very confused.
-
-Don't go changing the clock frequency on a whim when running Zephyr. Or well, it's ok I guess, but since the UART is bitbanged, this will change the baud rate as well. As of writing, the UART is running at 115200 baud rate when the CPU is 32 MHz. There are two NOPs in the driver to slow it down a bit, so if those are removed I think it could achieve baud rate 115200 on a 24MHz clock.. in case someone wants to try
+# SERV RISC-V Simulation & Cycle-Cost Project
+
+Compile RISC-V firmware, run it on a Verilator simulation of the SERV SoC, and get a
+per-instruction cycle-cost report. Five SERV RTL variants are provided so the same
+program can be compared across different CPU designs.
+
+---
+
+## 1. Five SERV RTL Variants
+
+All variants live under `serv_project/fusesoc_libraries/` and share the same firmware
+build & simulation flow. Pick one with `--serv-dir` (default: `serv_v1.5_rtl`).
+
+| Directory | Description |
+|---|---|
+| `serv_rtl_origin` | Original upstream SERV, unmodified. |
+| `serv_rtl_v1` | SERV + a custom **popcount** instruction (32-bit input, `rs1`), 68 cycles per execution. |
+| `serv_v1.5_rtl` | SERV + the custom popcount instruction (32-bit input, `rs1`), **42 cycles** per execution with in-window writeback (clean `rd`, no penalty on the next instruction). **Default.** |
+| `serv_bne` | SERV with an early-exit optimization for conditional branches. |
+| `serv_rtl_merge` | **Unified design** merging the **42-cycle popcount** and **branch early-exit** optimizations into a single core. Achieves cumulative speedups without state machine conflicts or redundant flip-flops. |
+
+Plain RV32I programs run on all five variants. The custom popcount instruction is available
+on `serv_rtl_v1`, `serv_v1.5_rtl`, and `serv_rtl_merge`.
+
+---
+
+## 2. Repository Layout
+
+```
+riscv_benchmark/
+├── Codespace/
+│   ├── env.sh                       Environment setup (toolchain PATH)
+│   └── SERV_codespace/
+│       └── build_codes/             Default firmware sources (startup.S + C code)
+├── serv_project/
+│   ├── build.sh                     Compile firmware → firmware.hex
+│   ├── run_sim.sh                   Build Verilator model + simulate + post-process
+│   ├── firmware.hex                 Latest compiled firmware image
+│   ├── scripts/
+│   │   ├── sim_main.cpp             Testbench (this project's own, see §5)
+│   │   ├── trace_dump.py            trace.bin → symbol-resolved trace
+│   │   └── compare_traces.py        Merge cycle costs + trace → report
+│   ├── log/                         Simulation outputs & reports
+│   └── fusesoc_libraries/           SERV RTL variants & PicoRV32 baseline
+│       ├── serv_v1.5_rtl/           v1.5 popcount design (default)
+│       ├── serv_bne/                BNE branch early-exit design
+│       ├── serv_rtl_merge/          Unified design (popcount 42-cycle + branch early-exit)
+│       ├── serv_rtl_origin/         Original upstream SERV
+│       ├── serv_rtl_v1/             v1 popcount design
+│       └── picorv32/                PicoRV32 multi-cycle baseline (see §7)
+└── AGENTS.md                        Detailed internal notes, scripts & measurement guide
+```
+
+---
+
+## 3. Toolchain & Environment
+
+Run once per shell (adds the in-repo RISC-V toolchain to `PATH`):
+
+```bash
+cd riscv_benchmark
+source Codespace/env.sh
+```
+
+Required tools:
+
+| Tool | Used by |
+|---|---|
+| `riscv64-unknown-elf-gcc` / `objcopy` / `objdump` | firmware compile & disassembly (in-repo, under `tools/riscv64`) |
+| `verilator` | Verilog → C++ simulation model |
+| `g++` | testbench compilation (`run_sim.sh`) |
+| `python3` | post-processing scripts |
+| `gtkwave` *(optional)* | view `log/sim_wave.vcd` |
+
+---
+
+## 4. Workflow: Build → Simulate → Report
+
+```bash
+cd serv_project
+
+# [1] Compile firmware (sources auto-discovered from a folder under
+#     Codespace/SERV_codespace/, default: build_codes/)
+./build.sh --build                       # → firmware.elf / .bin / .hex
+./build.sh --folder=<NAME> --build       # build from Codespace/SERV_codespace/<NAME>/
+
+# [2] Run the simulation on a SERV RTL variant (Verilator rebuild is automatic)
+./run_sim.sh                             # default RTL: serv_v1.5_rtl
+./run_sim.sh --serv-dir=fusesoc_libraries/serv_bne    # pick another variant
+./run_sim.sh --firmware=my.hex           # run a different image
+
+# [3] Read the per-instruction cycle report
+cat log/compare_result.txt
+```
+
+Both `build.sh` and `run_sim.sh` accept `--serv-dir=<variant>` to select which RTL to
+use (`build.sh` uses it for the linker script / hex converter; `run_sim.sh` uses it for
+the RTL file list). Outputs from `run_sim.sh`:
+
+| File | Contents |
+|---|---|
+| `log/sim_log.txt` | PC transitions with cycle cost per instruction |
+| `log/trace_dump.txt` | Symbol-resolved PC trace |
+| `log/compare_result.txt` | Merged per-instruction cycle report + summary stats |
+| `log/sim_wave.vcd` | Full waveform (GTKWave) |
+
+---
+
+## 5. Testbench
+
+The testbench is **written by this project**: `serv_project/scripts/sim_main.cpp`
+(compiled into `Vservant_sim` by `run_sim.sh`). It toggles the clock, applies reset, then
+on every rising edge watches the CPU's `pc_vld`/`pc_adr`. Each PC change means the
+previous instruction finished, so the elapsed cycles are that instruction's cost:
+
+```
+0x0000006c -> 0x00000070 : 42 cycles      ← custom popcount (v1.5 RTL)
+```
+
+`run_sim.sh` runs the binary with `+vcd=1 +trace_pc=1`, producing the VCD waveform and
+`trace.bin`, which `trace_dump.py` / `compare_traces.py` post-process into the report.
+The testbench does **not** capture UART output.
+
+---
+
+## 6. Running Your Own Program
+
+1. **Create a program folder** `Codespace/SERV_codespace/<NAME>/`.
+2. **Copy `startup.S`** from `Codespace/SERV_codespace/build_codes/`. It initialises the
+   stack, calls `main()`, and after `main` returns writes to address `0x90000000`
+   (HALT) and loops — this is what ends the simulation.
+3. **Add your code** (C or assembly). Firmware is compiled freestanding with
+   `-march=rv32i -mabi=ilp32 -O2 -nostdlib` — no libc, no floating point.
+4. **Build & run:**
+   ```bash
+   cd serv_project
+   ./build.sh --folder=<NAME> --build
+   ./run_sim.sh
+   ```
+5. **Check the result.** Instruction behaviour and cycle counts are in
+   `log/compare_result.txt`. To inspect a computed value, store it to a fixed RAM
+   address and look up that store in `log/sim_wave.vcd` (the UART is not captured).
+
+### Using the custom popcount (only on `serv_rtl_v1` / `serv_v1.5_rtl`)
+
+```c
+volatile static unsigned int popcnt_custom(unsigned int val) {
+    unsigned int rd;
+    asm volatile(".insn r 0x2B, 0, 0, %0, %1, x0"
+                 : "=r"(rd) : "r"(val));
+    return rd;
+}
+```
+
+`popcnt_custom(x)` returns the number of set bits in the 32-bit value `x`.
+
+---
+
+## 7. PicoRV32 Baseline Simulation & Cycle Measurement
+
+To benchmark SERV against an industry-standard 32-bit multi-cycle RISC-V core, this repository provides a dedicated build and simulation pipeline for **PicoRV32** under `serv_project/fusesoc_libraries/picorv32/`.
+
+### Cycle Measurement Principle (Summary)
+
+- **Execution Model**: PicoRV32 is a multi-cycle core with standard 32-bit datapath (CPI typically ~3–4), running alongside SERV's 1-bit serial architecture (~32–68 cycles/instruction).
+- **Measurement & Halt Mechanism**:
+  1. Firmware is compiled freestanding (`-march=rv32ic -mabi=ilp32 -O2`) with `firmware/startup_pico.S`.
+  2. When execution finishes, `startup_pico.S` signals success by writing `123456789` to address `0x20000000`, then executes `ebreak`.
+  3. The `ebreak` triggers the hardware `trap` signal.
+  4. The Verilator testbench (`testbench.v`) continuously increments `cycle_counter` on every `posedge clk`. Upon detecting `trap`, it prints:
+     ```text
+     TRAP after <cycles> clock cycles
+     ALL TESTS PASSED.
+     ```
+- **Quick Start**:
+  ```bash
+  cd serv_project/fusesoc_libraries/picorv32
+  ./build.sh --folder=random_forest --build --run   # Compile and simulate
+  ```
+
+> 📖 **Comprehensive Documentation**:
+> A complete architectural breakdown, memory layout (128KB RAM map, MMIO, BSS zeroing), linker script safeguards, trace decoding with `showtrace.py`, and detailed cycle benchmark comparisons against SERV are thoroughly documented in [**`AGENTS.md`**](file:///home/chenyoo/riscv_benchmark/AGENTS.md#picorv32-baseline-simulation--cycle-measurement).
+
+---
+
+## 8. Current Status & Next Plans
+
+### Completed Milestones
+1. **Custom Popcount Optimization (`v1.5_lucky`)**:
+   - Custom 2-stage popcount instruction (`.insn`, 42 cycles) with in-window writeback.
+   - Zero follower instruction stall (all followers run at baseline 36 cycles) and clean 32-bit `rd`.
+2. **Unified RTL Merge (`serv_rtl_merge`)**:
+   - Successfully merged **v1.5 popcount** and **BNE branch early-exit** into a unified core under `serv_project/fusesoc_libraries/serv_rtl_merge/`.
+   - Verified on `random_forest` (10 samples): Total execution cycles dropped to **464,213 cycles** (-11.8% vs. original SERV 526,208; -5.8% vs. v1.5 492,928).
+   - Execution path is 100% identical (0 mismatch), with 1,009 accelerated branches.
+3. **PicoRV32 Comparative Baseline**:
+   - Automated `build.sh` and `run_sim.sh` pipeline created and verified on `random_forest` (39,901 cycles).
+
+### Next Plans & Future Work
+1. **Broader Benchmark Suite Evaluation**:
+   - Run and evaluate `serv_rtl_merge` and PicoRV32 across additional workloads: `BNN` (Binarized Neural Network), `Tsetlin_Machine`, and `dhrystone`.
+2. **Branch Optimization Extensions**:
+   - Explore extending early-exit optimizations beyond equality/inequality (`BEQ`/`BNE`) to magnitude comparisons (`BLT`, `BGE`, `BLTU`, `BGEU`).
+3. **FPGA Synthesis & Silicon Resource Accounting**:
+   - Run FPGA synthesis (e.g. Vivado / Yosys) on `serv_rtl_merge` to quantify the exact LUT/FF area overhead compared to original SERV and PicoRV32.
+
+---
+
+See [`AGENTS.md`](file:///home/chenyoo/riscv_benchmark/AGENTS.md) for detailed internal notes, RTL implementation details, and the full script reference.

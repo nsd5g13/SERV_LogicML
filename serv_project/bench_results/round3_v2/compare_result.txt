@@ -1,0 +1,35 @@
+# Merged trace: sim_log.txt + trace_dump.txt
+# Total instructions traced: 12
+#
+#         PC     Next PC  Instr     Cycles
+# ----------  ----------  --------  ------
+  0x00000000  0x00000004  lui           36
+  0x00000004  0x00000008  lui           36
+  0x00000008  0x0000000c  li            36
+  0x0000000c  0x00000010  sb            70
+  0x00000010  0x00000048  jal           68
+  0x00000048  0x0000004c  li            36
+  0x0000004c  0x00000050  addi          36
+  0x00000050  0x00000054  .insn        250
+  0x00000054  0x00000058  lui           36
+  0x00000058  0x0000005c  zext.b        36
+  0x0000005c  0x00000060  sb            70
+  0x00000060  0x00000064  lui           36
+
+# ── Summary ──────────────────────────────
+# Instructions : 12
+# Total cycles : 746
+# Avg cycles   : 62.2
+# Min cycles   : 36
+# Max cycles   : 250
+
+# ── Average cycle cost per instruction ──
+# Instr     Count      Avg    Min    Max
+# --------  -----  -------  -----  -----
+  .insn         1    250.0    250    250
+  addi          1     36.0     36     36
+  jal           1     68.0     68     68
+  li            2     36.0     36     36
+  lui           4     36.0     36     36
+  sb            2     70.0     70     70
+  zext.b        1     36.0     36     36

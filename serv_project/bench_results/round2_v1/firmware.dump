@@ -1,0 +1,57 @@
+
+/home/chenyoo/riscv_benchmark/serv_project/firmware.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	00001137          	lui	x2,0x1
+   4:	40000537          	lui	x10,0x40000
+   8:	00100293          	addi	x5,x0,1
+   c:	00550023          	sb	x5,0(x10) # 40000000 <main+0x3fffffb8>
+  10:	038000ef          	jal	x1,48 <main>
+
+00000014 <halt>:
+  14:	900002b7          	lui	x5,0x90000
+  18:	0002a023          	sw	x0,0(x5) # 90000000 <main+0x8fffffb8>
+  1c:	ff9ff06f          	jal	x0,14 <halt>
+
+00000020 <asm_uart_putchar>:
+  20:	00050293          	addi	x5,x10,0
+  24:	40000537          	lui	x10,0x40000
+  28:	1002e293          	ori	x5,x5,256
+  2c:	00129293          	slli	x5,x5,0x1
+  30:	00550023          	sb	x5,0(x10) # 40000000 <main+0x3fffffb8>
+  34:	0012d293          	srli	x5,x5,0x1
+  38:	00000013          	addi	x0,x0,0
+  3c:	00000013          	addi	x0,x0,0
+  40:	fe0298e3          	bne	x5,x0,30 <asm_uart_putchar+0x10>
+  44:	00008067          	jalr	x0,0(x1)
+
+Disassembly of section .text.startup:
+
+00000048 <main>:
+  48:	00000793          	addi	x15,x0,0
+  4c:	000787ab          	.insn	4, 0x000787ab
+  50:	fff00693          	addi	x13,x0,-1
+  54:	000686ab          	.insn	4, 0x000686ab
+  58:	deadc737          	lui	x14,0xdeadc
+  5c:	00d787b3          	add	x15,x15,x13
+  60:	eef70713          	addi	x14,x14,-273 # deadbeef <main+0xdeadbea7>
+  64:	0007072b          	.insn	4, 0x0007072b
+  68:	555556b7          	lui	x13,0x55555
+  6c:	00e787b3          	add	x15,x15,x14
+  70:	55568693          	addi	x13,x13,1365 # 55555555 <main+0x5555550d>
+  74:	000686ab          	.insn	4, 0x000686ab
+  78:	aaaab737          	lui	x14,0xaaaab
+  7c:	00d787b3          	add	x15,x15,x13
+  80:	aaa70713          	addi	x14,x14,-1366 # aaaaaaaa <main+0xaaaaaa62>
+  84:	0007072b          	.insn	4, 0x0007072b
+  88:	00e787b3          	add	x15,x15,x14
+  8c:	0ff7f793          	andi	x15,x15,255
+  90:	80000737          	lui	x14,0x80000
+  94:	00f70023          	sb	x15,0(x14) # 80000000 <main+0x7fffffb8>
+  98:	900007b7          	lui	x15,0x90000
+  9c:	0007a023          	sw	x0,0(x15) # 90000000 <main+0x8fffffb8>
+  a0:	00000513          	addi	x10,x0,0
+  a4:	00008067          	jalr	x0,0(x1)

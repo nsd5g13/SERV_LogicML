@@ -1,0 +1,54 @@
+
+/home/chenyoo/riscv_benchmark/serv_project/firmware.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	00001137          	lui	x2,0x1
+   4:	40000537          	lui	x10,0x40000
+   8:	00100293          	addi	x5,x0,1
+   c:	00550023          	sb	x5,0(x10) # 40000000 <arr+0x3fffff64>
+  10:	038000ef          	jal	x1,48 <main>
+
+00000014 <halt>:
+  14:	900002b7          	lui	x5,0x90000
+  18:	0002a023          	sw	x0,0(x5) # 90000000 <arr+0x8fffff64>
+  1c:	ff9ff06f          	jal	x0,14 <halt>
+
+00000020 <asm_uart_putchar>:
+  20:	00050293          	addi	x5,x10,0
+  24:	40000537          	lui	x10,0x40000
+  28:	1002e293          	ori	x5,x5,256
+  2c:	00129293          	slli	x5,x5,0x1
+  30:	00550023          	sb	x5,0(x10) # 40000000 <arr+0x3fffff64>
+  34:	0012d293          	srli	x5,x5,0x1
+  38:	00000013          	addi	x0,x0,0
+  3c:	00000013          	addi	x0,x0,0
+  40:	fe0298e3          	bne	x5,x0,30 <asm_uart_putchar+0x10>
+  44:	00008067          	jalr	x0,0(x1)
+
+Disassembly of section .text.startup:
+
+00000048 <main>:
+  48:	09c00593          	addi	x11,x0,156
+  4c:	01458813          	addi	x16,x11,20
+  50:	00000513          	addi	x10,x0,0
+  54:	0005a703          	lw	x14,0(x11)
+  58:	02000793          	addi	x15,x0,32
+  5c:	00000693          	addi	x13,x0,0
+  60:	00177613          	andi	x12,x14,1
+  64:	fff78793          	addi	x15,x15,-1
+  68:	00c686b3          	add	x13,x13,x12
+  6c:	00175713          	srli	x14,x14,0x1
+  70:	fe0798e3          	bne	x15,x0,60 <main+0x18>
+  74:	00458593          	addi	x11,x11,4
+  78:	00d50533          	add	x10,x10,x13
+  7c:	fd059ce3          	bne	x11,x16,54 <main+0xc>
+  80:	0ff57513          	andi	x10,x10,255
+  84:	800007b7          	lui	x15,0x80000
+  88:	00a78023          	sb	x10,0(x15) # 80000000 <arr+0x7fffff64>
+  8c:	900007b7          	lui	x15,0x90000
+  90:	0007a023          	sw	x0,0(x15) # 90000000 <arr+0x8fffff64>
+  94:	00000513          	addi	x10,x0,0
+  98:	00008067          	jalr	x0,0(x1)
