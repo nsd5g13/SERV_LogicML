@@ -270,6 +270,8 @@ def find_debug_transactions(vcd_file, output_file):
 
     print()
     print(f"Found {len(results)} occurrence(s).")
+    if len(results) == 0:
+        print("Enable or correct the debug option in the C source code.")
 
     for timestamp, data_value, data_binary in results:
 

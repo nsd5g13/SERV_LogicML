@@ -261,6 +261,42 @@ do_build() {
 
     echo ""
     ok "Build done! Outputs: $ELF / $BIN / $HEX"
+
+
+# Debug
+DEBUG_DIR="$FOLDER_PATH/debug"
+DEBUG_SCRIPT="$FOLDER_PATH/debug/compile_debug.sh"
+
+[[ -d "$DEBUG_DIR" ]] || fail "Debug directory not found: $DEBUG_DIR"
+[[ -f "$DEBUG_SCRIPT" ]] || fail "Debug compile script not found: $DEBUG_SCRIPT"
+
+info "Building debug executable..."
+info "  Debug directory: $DEBUG_DIR"
+info "  Compile script:  $DEBUG_SCRIPT"
+echo ""
+
+chmod +x "$DEBUG_SCRIPT"
+
+(
+    cd "$DEBUG_DIR"
+    ./compile_debug.sh
+)
+
+
+ok "Debug executable built: $USE_FOLDER"
+
+echo ""
+info "Running debug executable..."
+echo "════════════════════════════════════════"
+
+(
+    cd "$DEBUG_DIR"
+    "./$(basename "$USE_FOLDER")"
+)
+
+echo "════════════════════════════════════════"
+ok "Debug execution complete"
+
 }
 
 # ══════════════════════════════════════════════════════════════
@@ -378,3 +414,4 @@ COMMON_FLAGS="-march=$ARCH -mabi=$ABI -static -nostdlib -nostartfiles -ffreestan
 
 if $DO_BUILD; then do_build; fi
 if $DO_RUN;   then do_run;   fi
+

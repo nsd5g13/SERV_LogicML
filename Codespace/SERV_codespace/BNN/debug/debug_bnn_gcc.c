@@ -6,7 +6,7 @@
 #include "samples_bnn.h"
 #include "helpers.h"
 
-#define DEBUG_MAILBOX (*(volatile uint32_t *)0x40101200)
+#include <stdio.h>
 
 // --- main function ---
 int32_t result_array[no_samples];
@@ -23,9 +23,11 @@ int main(void) {
     argmax(yout2, result_array, no_samples, NEURONS1);
 
     // For debugging only
+    printf("Predicted class:\n");
     for (int i = 0; i < no_samples; i++) {
-        DEBUG_MAILBOX = (uint32_t)result_array[i];
+        printf("%d ", result_array[i]);
     }
+    printf("\n");
 
     // labels now contain the predicted class for each sample
     //while(1); // bare-metal infinite loop

@@ -264,6 +264,11 @@ if $DO_RUN; then
         echo "  [WARN] compare_traces.py failed"
     fi
 
+    echo "  [debug_dump] Running debug dump to capture predicted class..."
+    if ! python3 scripts/debug_dump.py log/sim_wave.vcd; then
+        echo "  [WARN] debug_dump.py failed"
+    fi
+
     echo "════════════════════════════════════════"
     echo "  Done! Logs in log/"
     echo "════════════════════════════════════════"

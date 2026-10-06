@@ -6,8 +6,6 @@
 #include "samples_bnn.h"
 #include "helpers.h"
 
-#define DEBUG_MAILBOX (*(volatile uint32_t *)0x40101200)
-
 // --- main function ---
 int32_t result_array[no_samples];
 
@@ -21,11 +19,6 @@ int main(void) {
     dense1(yout1_packed, LAYER1, yout2, NEURONS1, ACTIVATIONS1_PACKED, 0, NEURONS0); // second layer: no activation
 
     argmax(yout2, result_array, no_samples, NEURONS1);
-
-    // For debugging only
-    for (int i = 0; i < no_samples; i++) {
-        DEBUG_MAILBOX = (uint32_t)result_array[i];
-    }
 
     // labels now contain the predicted class for each sample
     //while(1); // bare-metal infinite loop
